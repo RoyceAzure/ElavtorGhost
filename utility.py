@@ -22,6 +22,21 @@ def save_db_json(dbProxy, file_name):
 
 
 
+def create_floor_dict(floor_w):
+    floorcount = 0
+    floor_list = []
+    floordict = {}
+    for i in floor_w:
+        floorcount+=1
+        floordict.update({str(floorcount):0})
+        if(i != 0):
+            floor_list.append(i)
+    for i in floor_list:
+        floordict[str(i)] += i/len(floor_list)
+    return floordict
+
+
+
 
 def save_people_db(DataBase, encoding, floor, floor_w):
     try:
@@ -35,7 +50,7 @@ def save_people_db(DataBase, encoding, floor, floor_w):
         print("============in save_people_db  type encoding : {}".format(type(encoding)))
         temp["encoding"] = encoding.tolist()
         temp["floor"] = dict()
-        temp["floor_w"] = dict()
+        temp["floor_w"] = create_floor_dict(floor_w)
         print("============in save_people_db   2")
         for (flk,flv), (flwk, flwv) in (zip(floor.items(), floor_w.items())):
             if temp["floor"].get(str(flk),None) is None:

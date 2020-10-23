@@ -92,7 +92,7 @@ get info from Q_writeDB then wirte to proxydb
 Q_writeDB : mp.queue
 db : proxydict
 """
-def muti_process_write_db(Q_writeDB,db):
+def muti_process_write_db(Q_writeDB,db,current_floor,floor_list):
     try:
         print("=====================================muti_process_write_db")
         while True:
@@ -103,7 +103,7 @@ def muti_process_write_db(Q_writeDB,db):
             print("================in muti_process_write_db Q_writeDB start to write db ")
             people = Q_writeDB.get()
             print("================in muti_process_write_db Q_writeDB start to write db type {} ".format(people[0]))
-            save_people_db(db, people[0], people[2],people[3])
+            save_people_db(db, people[0],current_floor,floor_list)
             save_db_json(db, "test.json")
     except Exception as e:
         print(e)
@@ -113,7 +113,7 @@ def muti_process_write_db(Q_writeDB,db):
 #combine test alex
 #if __name__ == '__main__':
 
-def videoprocess(img_dir, video_path, detector, Q_encodings, Q_writeDB,pool):
+def videoprocess(img_dir, video_path, detector, Q_encodings, Q_writeDB,pool,current_floor,floor_list):
 
 
     cap = cv2.VideoCapture(video_path)
@@ -130,6 +130,7 @@ def videoprocess(img_dir, video_path, detector, Q_encodings, Q_writeDB,pool):
     print("after load db type: {}".format(type(db)))
     db_encodings_list = [db[Id]["encoding"] for Id in sorted(db.keys())] if db else []
     pool.apply_async(muti_process_match_db,args = (Q_encodings,Q_writeDB,db_encodings_list))
+    #########
     pool.apply_async(muti_process_write_db,args = (Q_writeDB,db))
     
     while(cap.isOpened()):
@@ -256,7 +257,7 @@ if __name__ == '__main__':
     is_elavetor_open =manager.Value(c_bool, False)
     floor_list = Array("i",[0]*6)
     current_floor =  Value("i", 0)
-    floor_list_to_push = Array("i",[0]*6)
+
 
     #init video process
     img_dir,video_dir = preparePath()
@@ -268,7 +269,7 @@ if __name__ == '__main__':
     pool = mp.Pool(4)
 
 
-    elevator_process = Process(target=run_elavtor, args=(is_elavetor_open,floor_list,current_floor,floor_list_to_push))
+    elevator_process = Process(target=run_elavtor, args=(is_elavetor_open,floor_list,current_floor))
     #     print(is_open)
     elevator_process.start()
     while True:
@@ -276,6 +277,6 @@ if __name__ == '__main__':
         # print(floor_list[:])
         # print(current_floor.value)
         if(is_elavetor_open.value == True):
-            videoprocess(img_dir, video_path, detector, Q_encodings, Q_writeDB, pool)
+            videoprocess(img_dir, video_path, detector, Q_encodings, Q_writeDB, pool,current_floor.value,floor_list[:])
             print("open")
     elevator_process.join()

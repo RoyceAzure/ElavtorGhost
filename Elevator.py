@@ -238,9 +238,9 @@ class Elevator():
         mainloop()
 
 
-def run_elavtor(is_elavetor_open,floor_list,current_floor):
+def run_elavtor(is_elavetor_open,floor_list,current_floor,floor_list_to_push):
     try:
-        a = Elevator(is_elavetor_open,floor_list,current_floor)
+        a = Elevator(is_elavetor_open,floor_list,current_floor,floor_list_to_push)
         print(is_elavetor_open.value)
         #create a Elevator
         a.createElevator()
