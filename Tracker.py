@@ -33,7 +33,7 @@ class CentroidTracker:
     def register(self, boxs, score, frame):
         # when registering an object we use the next available object
         # ID to store the centroid
-        
+        print("rrrrrrrrrrrrrrrrr",self.imgdir)
         save_img(self.imgdir, self.nextObjectID,frame[boxs[1]:boxs[3],boxs[0]:boxs[2]])
         
         picture_of_face = face_recognition.load_image_file(self.imgdir + str(self.nextObjectID) + '.png')
@@ -231,5 +231,13 @@ class TrackableObject:
         self.path = 'images/temp_face/photo'+ str(objectID) + '.png'
 
 def save_img(imgdir,num,img):
-    cv2.imwrite(imgdir + str(num) + '.png',img)
+    # print("in save_img")
+    # print("in save_img imgdir:{}".format(imgdir))
+    # print("in save_img num:{}".format(num))
+    #print("in save_img img:{}".format(img))
+    # print("images/temp_face/photo" + str(num) + '.png')
+    try:
+         cv2.imwrite("images/temp_face/photo" + str(num) + '.png',img)
+    except:
+        pass
     # print('儲存:','photo' + str(num) + '.png')

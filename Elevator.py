@@ -1,6 +1,7 @@
 from tkinter import *
 import time
 import threading
+import multiprocessing
 class Elevator():
     waiting_list = [0,0,0,0,0,0] 
     status = 0
@@ -15,6 +16,7 @@ class Elevator():
         self.floor = 1
         # self.is_open = is_open
         self.floor_list_to_push = floor_list_to_push
+        
         self.is_elavetor_open = is_elavetor_open
         self.floor_list = floor_list
         self.current_floor = current_floor
@@ -69,19 +71,25 @@ class Elevator():
             self.is_elavetor_open.value = False
         self.d.itemconfigure(self.doorstatus,text = self.vardoor,fill = filling)
     def pushButton(self):
-        for i in self.floor_list_to_push:
-            if i == 6:
+        # p=multiprocessing.current_process()
+        # self.floor_list_to_push = getattr(p, "floor_list_to_push")
+        # print("as=============================================================",self.floor_list_to_push[:])
+        for i in range(len(self.floor_list_to_push)):
+            # print(self.floor_list_to_push[i])
+            if self.floor_list_to_push[i] == 6:
                 self.pushtrigger6()
-            elif i == 5:
+            elif self.floor_list_to_push[i] == 5:
                 self.pushtrigger5()
-            elif i == 4:
+            elif self.floor_list_to_push[i] == 4:
                 self.pushtrigger4()
-            elif i == 3:
+            elif self.floor_list_to_push[i] == 3:
                 self.pushtrigger3()
-            elif i == 2:
+            elif self.floor_list_to_push[i] == 2:
                 self.pushtrigger2()
-            elif i == 1:
+            elif self.floor_list_to_push[i] == 1:
                 self.pushtrigger1()
+            self.floor_list_to_push[i] = 0
+        #floor_list_to_push.clear()
     def pushtrigger6(self):
         self.s6.configure(fg="red")
         self.waiting_list[5] = 6
@@ -132,7 +140,7 @@ class Elevator():
             self.s6.configure(fg="black") 
             self.waiting_list[5] = 0
             self.floor_list[5] = 0
-        time.sleep(4)
+        time.sleep(10)
         self.doorcontrol(0)
         time.sleep(1)
     def doorclose(self):
@@ -148,6 +156,8 @@ class Elevator():
         remb = 0
         rems = 0
         while(1):
+            #####alex
+            self.pushButton()
             maxnum = max(self.waiting_list);
             if(maxnum == 0):
                 pass
@@ -231,7 +241,7 @@ class Elevator():
         self.d = Canvas(self.master, width=200, height=320)
         self.d.pack(side=LEFT,anchor = NW)
         self.stairstatus = self.d.create_text(100,100,font=('TimesNewRoman',50),text=self.floor)
-        self.doorstatus = self.d.create_text(100,150,font=('TimesNewRoman',30),text=self.vardoor,fill = "red")   
+        self.doorstatus = self.d.create_text(100,150,font=('TimesNewRoman',24),text=self.vardoor,fill = "red")   
         th = threading.Thread(target = self.moving)
         th.setDaemon(True)
         th.start()

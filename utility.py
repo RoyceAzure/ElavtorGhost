@@ -22,7 +22,7 @@ def save_db_json(dbProxy, file_name):
 
 
 
-def create_floor_dict(floor_w):
+def create_floor_dict(people_count, floor_w):
     floorcount = 0
     floor_list = []
     floordict = {}
@@ -32,35 +32,43 @@ def create_floor_dict(floor_w):
         if(i != 0):
             floor_list.append(i)
     for i in floor_list:
-        floordict[str(i)] += i/len(floor_list)
+        floordict[str(i)] += 1/(people_count*floorcount)
     return floordict
 
 
 
 
-def save_people_db(DataBase, encoding, floor, floor_w):
+def save_people_db(DataBase, encoding,lock):
     try:
+
         print("============in save_people_db")
         print("============in save_people_db  before db :{}".format(DataBase))
-        Id = len(DataBase) 
+        Id = len(DataBase)
         print("============in save_people_db ID :{}".format(Id))
         temp = dict()
         print("============in save_people_db   1")
         print("============in save_people_db   encoding : {}".format(encoding))
         print("============in save_people_db  type encoding : {}".format(type(encoding)))
         temp["encoding"] = encoding.tolist()
-        temp["floor"] = dict()
-        temp["floor_w"] = create_floor_dict(floor_w)
-        print("============in save_people_db   2")
-        for (flk,flv), (flwk, flwv) in (zip(floor.items(), floor_w.items())):
-            if temp["floor"].get(str(flk),None) is None:
-                temp["floor"][str(flk)] = 0
-            if temp["floor_w"].get(str(flk),None) is None:
-                temp["floor_w"][str(flk)] = 0
-            temp["floor"][str(flk)]+=flv
-            temp["floor_w"][str(flwk)]+=flwv
-        print("============in save_people_db   3")
+        temp["type"] = "new"
+        temp["floor_w"] = {
+            "1" : 0,
+            "2" : 0,
+            "3" : 0,
+            "4" : 0,
+            "5" : 0,
+            "6" : 0,
+        }
+        # for (flk,flv), (flwk, flwv) in (zip(floor.items(), floor_w.items())):
+        #     if temp["floor"].get(str(flk),None) is None:
+        #         temp["floor"][str(flk)] = 0
+        #     if temp["floor_w"].get(str(flk),None) is None:
+        #         temp["floor_w"][str(flk)] = 0
+        #     temp["floor"][str(flk)]+=flv
+        #     temp["floor_w"][str(flwk)]+=flwv
+        lock.acquire()
         DataBase[str(Id)] = temp
+        lock.release()
         print("after save to db : {}".format(DataBase))
     except Exception as e:
         print(e)

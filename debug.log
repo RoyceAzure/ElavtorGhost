@@ -1,0 +1,7 @@
+[1024/023321.809:ERROR:directory_reader_win.cc(43)] FindFirstFile: 系統找不到指定的路徑。 (0x3)
+[1024/072011.074:ERROR:process_reader_win.cc(123)] NtOpenThread: {拒絕存取} 程序已請求存取一物件，但未被授與存取權。 (0xc0000022)
+[1024/072011.074:ERROR:exception_snapshot_win.cc(99)] thread ID 19272 not found in process
+[1024/072011.074:ERROR:process_reader_win.cc(123)] NtOpenThread: {拒絕存取} 程序已請求存取一物件，但未被授與存取權。 (0xc0000022)
+[1024/072011.074:ERROR:process_reader_win.cc(123)] NtOpenThread: {拒絕存取} 程序已請求存取一物件，但未被授與存取權。 (0xc0000022)
+[1024/072011.074:ERROR:exception_snapshot_win.cc(99)] thread ID 2692 not found in process
+[1024/072011.074:ERROR:exception_snapshot_win.cc(99)] thread ID 18572 not found in process
